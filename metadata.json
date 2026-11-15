@@ -1,0 +1,6 @@
+{
+  "name": "Flowspan",
+  "description": "An editorial Pomodoro focus timer with drifting circular petals, natural wind gusts, seven curated ink palettes, and ambient soundscapes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

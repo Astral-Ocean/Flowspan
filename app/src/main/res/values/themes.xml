@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.MyApplication" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">#F9E1D6</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="Theme.Flowspan.Pink" parent="Theme.MyApplication">
+        <item name="android:windowBackground">#FAE3EA</item>
+    </style>
+    <style name="Theme.Flowspan.Red" parent="Theme.MyApplication">
+        <item name="android:windowBackground">#F9E1D6</item>
+    </style>
+    <style name="Theme.Flowspan.Green" parent="Theme.MyApplication">
+        <item name="android:windowBackground">#DCF0E2</item>
+    </style>
+    <style name="Theme.Flowspan.Blue" parent="Theme.MyApplication">
+        <item name="android:windowBackground">#DCE8FA</item>
+    </style>
+    <style name="Theme.Flowspan.Cyan" parent="Theme.MyApplication">
+        <item name="android:windowBackground">#D9EFEF</item>
+    </style>
+    <style name="Theme.Flowspan.Yellow" parent="Theme.MyApplication">
+        <item name="android:windowBackground">#FBEEC8</item>
+    </style>
+    <style name="Theme.Flowspan.Purple" parent="Theme.MyApplication">
+        <item name="android:windowBackground">#E8DFF7</item>
+    </style>
+    <style name="Theme.Flowspan.PineSoot" parent="Theme.MyApplication">
+        <item name="android:windowBackground">#ECE8DF</item>
+    </style>
+    <style name="Theme.Flowspan.Alpenglow" parent="Theme.MyApplication">
+        <item name="android:windowBackground">#F7E2E5</item>
+    </style>
+    <style name="Theme.Flowspan.Osmanthus" parent="Theme.MyApplication">
+        <item name="android:windowBackground">#FAEAD4</item>
+    </style>
+    <style name="Theme.Flowspan.SeaGlass" parent="Theme.MyApplication">
+        <item name="android:windowBackground">#DFEFF4</item>
+    </style>
+    <style name="Theme.Flowspan.SeaMist" parent="Theme.MyApplication">
+        <item name="android:windowBackground">#E4ECEB</item>
+    </style>
+</resources>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Flowspan</string>
+    <string name="btn_start_cycle">开始专注</string>
+    <string name="btn_focus_locked">专注</string>
+    <string name="btn_return_default">回到准备</string>
+    <string name="btn_settings">设置</string>
+</resources>
