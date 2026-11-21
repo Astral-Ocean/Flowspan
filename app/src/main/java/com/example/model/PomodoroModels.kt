@@ -298,14 +298,14 @@ enum class AppLanguage(
   val aboutMe: String
     get() =
       when (this) {
-        ZH_CN -> "关于我"
-        ZH_TW -> "關於我"
-        EN -> "About Me"
+        ZH_CN -> "关于开发者"
+        ZH_TW -> "關於開發者"
+        EN -> "About Developer"
         JA -> "開発者について"
         KO -> "개발자 소개"
-        FR -> "À propos de l'auteur"
-        DE -> "Über mich"
-        ES -> "Sobre mí"
+        FR -> "À propos du développeur"
+        DE -> "Über den Entwickler"
+        ES -> "Sobre el desarrollador"
       }
 
   val openPersonalWebsite: String
@@ -331,18 +331,18 @@ enum class ThemePaletteId(
   val storageKey: String,
   val swatchColor: Color,
 ) {
-  PINK("pink", Color(0xFFC9486D)),
   RED("red", Color(0xFFB8321C)),
-  GREEN("green", Color(0xFF2B6D47)),
-  BLUE("blue", Color(0xFF295894)),
-  CYAN("cyan", Color(0xFF1C7579)),
-  YELLOW("yellow", Color(0xFFBA7A10)),
-  PURPLE("purple", Color(0xFF654194)),
-  PINE_SOOT("pine_soot", Color(0xFF282B30)),
   ALPENGLOW("alpenglow", Color(0xFFD65E53)),
   OSMANTHUS("osmanthus", Color(0xFFD97224)),
+  YELLOW("yellow", Color(0xFFBA7A10)),
+  GREEN("green", Color(0xFF2B6D47)),
+  CYAN("cyan", Color(0xFF1C7579)),
   SEA_GLASS("sea_glass", Color(0xFF1E7B85)),
-  SEA_MIST("sea_mist", Color(0xFF627E87));
+  SEA_MIST("sea_mist", Color(0xFF627E87)),
+  BLUE("blue", Color(0xFF295894)),
+  PURPLE("purple", Color(0xFF654194)),
+  PINK("pink", Color(0xFFC9486D)),
+  PINE_SOOT("pine_soot", Color(0xFF282B30));
 
   fun label(language: AppLanguage): String =
     when (this) {

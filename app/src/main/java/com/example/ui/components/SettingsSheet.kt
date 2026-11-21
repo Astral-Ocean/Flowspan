@@ -333,28 +333,29 @@ fun SettingsScreen(
                     Box(
                       modifier =
                         Modifier
-                          .size(38.dp)
+                          .size(36.dp)
                           .graphicsLayer {
                             scaleX = swatchScale
                             scaleY = swatchScale
                           }
-                          .clip(CircleShape)
-                          .background(
-                            if (selected) palette.hairlineDivider.copy(alpha = 0.35f)
-                            else Color.Transparent
-                          )
-                          .padding(3.dp),
+                          .border(
+                            width = if (selected) 2.dp else 0.dp,
+                            color = if (selected) item.swatchColor else Color.Transparent,
+                            shape = CircleShape,
+                          ),
                       contentAlignment = Alignment.Center,
                     ) {
                       Box(
                         modifier =
                           Modifier
-                            .size(if (selected) 28.dp else 26.dp)
+                            .size(if (selected) 24.dp else 26.dp)
                             .clip(CircleShape)
                             .background(item.swatchColor)
                             .border(
-                              width = if (selected) 2.dp else 0.8.dp,
-                              color = if (selected) Color.White else Color.Black.copy(alpha = 0.12f),
+                              width = if (selected) 0.dp else 0.75.dp,
+                              color =
+                                if (selected) Color.Transparent
+                                else Color.Black.copy(alpha = 0.12f),
                               shape = CircleShape,
                             )
                       )
@@ -387,7 +388,7 @@ fun SettingsScreen(
                 Modifier
                   .fillMaxWidth()
                   .background(rowHighlight)
-                  .defaultMinSize(minHeight = 54.dp)
+                  .defaultMinSize(minHeight = 50.dp)
                   .clickable(
                     role = Role.RadioButton,
                     interactionSource = rowInteraction,
@@ -395,26 +396,20 @@ fun SettingsScreen(
                   ) {
                     onAmbientTrackSelect(track)
                   }
-                  .padding(horizontal = 16.dp, vertical = 12.dp)
+                  .padding(horizontal = 16.dp, vertical = 13.dp)
                   .testTag("ambient_track_${track.storageKey}"),
               verticalAlignment = Alignment.CenterVertically,
             ) {
-              Column(modifier = Modifier.weight(1f)) {
-                Text(
-                  text = track.title(lang),
-                  style =
-                    MaterialTheme.typography.bodyLarge.copy(
-                      fontSize = 15.5.sp,
-                      fontWeight = if (selected) FontWeight.Medium else FontWeight.Normal,
-                    ),
-                  color = palette.inkPrimary,
-                )
-                Text(
-                  text = track.description(lang),
-                  style = MaterialTheme.typography.bodyMedium.copy(fontSize = 12.sp),
-                  color = palette.inkSecondary,
-                )
-              }
+              Text(
+                text = track.title(lang),
+                style =
+                  MaterialTheme.typography.bodyLarge.copy(
+                    fontSize = 15.5.sp,
+                    fontWeight = if (selected) FontWeight.Medium else FontWeight.Normal,
+                  ),
+                color = palette.inkPrimary,
+                modifier = Modifier.weight(1f),
+              )
 
               if (selected) {
                 Spacer(modifier = Modifier.width(8.dp))
@@ -454,7 +449,7 @@ fun SettingsScreen(
                 Modifier
                   .fillMaxWidth()
                   .background(rowHighlight)
-                  .defaultMinSize(minHeight = 54.dp)
+                  .defaultMinSize(minHeight = 50.dp)
                   .clickable(
                     role = Role.RadioButton,
                     interactionSource = rowInteraction,
@@ -462,26 +457,20 @@ fun SettingsScreen(
                   ) {
                     onTransitionChimeSelect(chime)
                   }
-                  .padding(horizontal = 16.dp, vertical = 12.dp)
+                  .padding(horizontal = 16.dp, vertical = 13.dp)
                   .testTag("transition_chime_${chime.storageKey}"),
               verticalAlignment = Alignment.CenterVertically,
             ) {
-              Column(modifier = Modifier.weight(1f)) {
-                Text(
-                  text = chime.title(lang),
-                  style =
-                    MaterialTheme.typography.bodyLarge.copy(
-                      fontSize = 15.5.sp,
-                      fontWeight = if (selected) FontWeight.Medium else FontWeight.Normal,
-                    ),
-                  color = palette.inkPrimary,
-                )
-                Text(
-                  text = chime.description(lang),
-                  style = MaterialTheme.typography.bodyMedium.copy(fontSize = 12.sp),
-                  color = palette.inkSecondary,
-                )
-              }
+              Text(
+                text = chime.title(lang),
+                style =
+                  MaterialTheme.typography.bodyLarge.copy(
+                    fontSize = 15.5.sp,
+                    fontWeight = if (selected) FontWeight.Medium else FontWeight.Normal,
+                  ),
+                color = palette.inkPrimary,
+                modifier = Modifier.weight(1f),
+              )
 
               if (selected) {
                 Spacer(modifier = Modifier.width(8.dp))
@@ -625,6 +614,29 @@ fun SettingsScreen(
               contentDescription = lang.openPersonalWebsite,
               tint = palette.accent,
               modifier = Modifier.size(18.dp),
+            )
+          }
+
+          IosRowDivider()
+
+          Row(
+            modifier =
+              Modifier
+                .fillMaxWidth()
+                .defaultMinSize(minHeight = 48.dp)
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+          ) {
+            Text(
+              text = "Flowspan",
+              style = MaterialTheme.typography.bodyLarge.copy(fontSize = 15.5.sp),
+              color = palette.inkPrimary,
+            )
+            Text(
+              text = com.example.BuildConfig.VERSION_NAME,
+              style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
+              color = palette.inkSecondary,
             )
           }
         }
