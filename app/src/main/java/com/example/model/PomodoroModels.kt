@@ -25,14 +25,14 @@ enum class AppLanguage(
   val readyTitle: String
     get() =
       when (this) {
-        ZH_CN -> "准备"
-        ZH_TW -> "準備"
-        EN -> "Ready"
-        JA -> "準備"
-        KO -> "준비"
-        FR -> "Prêt"
-        DE -> "Bereit"
-        ES -> "Listo"
+        ZH_CN -> "静候"
+        ZH_TW -> "靜候"
+        EN -> "Poised"
+        JA -> "静待"
+        KO -> "정적"
+        FR -> "En attente"
+        DE -> "In Ruhe"
+        ES -> "En calma"
       }
 
   val focusTitle: String
@@ -90,8 +90,8 @@ enum class AppLanguage(
   val resetReady: String
     get() =
       when (this) {
-        ZH_CN -> "回到准备"
-        ZH_TW -> "回到準備"
+        ZH_CN -> "重归静候"
+        ZH_TW -> "重歸靜候"
         EN -> "Reset"
         JA -> "リセット"
         KO -> "초기화"
@@ -246,14 +246,27 @@ enum class AppLanguage(
   val sectionAmbience: String
     get() =
       when (this) {
-        ZH_CN -> "背景白噪"
-        ZH_TW -> "背景白噪"
+        ZH_CN -> "背景音"
+        ZH_TW -> "背景音"
         EN -> "AMBIENCE"
         JA -> "環境音"
         KO -> "배경 사운드"
         FR -> "AMBIANCE"
         DE -> "ATMOSPHÄRE"
         ES -> "AMBIENTE"
+      }
+
+  val versionLabel: String
+    get() =
+      when (this) {
+        ZH_CN -> "版本"
+        ZH_TW -> "版本"
+        EN -> "Version"
+        JA -> "バージョン"
+        KO -> "버전"
+        FR -> "Version"
+        DE -> "Version"
+        ES -> "Versión"
       }
 
   val sectionChime: String
@@ -646,8 +659,6 @@ enum class TransitionChime(
   val storageKey: String,
 ) {
   BELL("bell"),
-  WOODBLOCK("woodblock"),
-  DROPLET("droplet"),
   HARMONIC("harmonic"),
   NONE("none");
 
@@ -664,28 +675,6 @@ enum class TransitionChime(
           AppLanguage.DE -> "Tempelglocke"
           AppLanguage.ES -> "Campana zen"
         }
-      WOODBLOCK ->
-        when (language) {
-          AppLanguage.ZH_CN -> "静心木鱼"
-          AppLanguage.ZH_TW -> "靜心木魚"
-          AppLanguage.EN -> "Zen Woodblock"
-          AppLanguage.JA -> "木魚"
-          AppLanguage.KO -> "차분한 목탁"
-          AppLanguage.FR -> "Mokugyo"
-          AppLanguage.DE -> "Zen-Holzblock"
-          AppLanguage.ES -> "Bloque de madera"
-        }
-      DROPLET ->
-        when (language) {
-          AppLanguage.ZH_CN -> "空谷水滴"
-          AppLanguage.ZH_TW -> "空谷水滴"
-          AppLanguage.EN -> "Clear Droplet"
-          AppLanguage.JA -> "水滴"
-          AppLanguage.KO -> "맑은 물방울"
-          AppLanguage.FR -> "Goutte claire"
-          AppLanguage.DE -> "Wassertropfen"
-          AppLanguage.ES -> "Gota cristalina"
-        }
       HARMONIC ->
         when (language) {
           AppLanguage.ZH_CN -> "柔和泛音"
@@ -699,12 +688,12 @@ enum class TransitionChime(
         }
       NONE ->
         when (language) {
-          AppLanguage.ZH_CN -> "静音"
-          AppLanguage.ZH_TW -> "靜音"
-          AppLanguage.EN -> "Mute"
+          AppLanguage.ZH_CN -> "静谧无声"
+          AppLanguage.ZH_TW -> "靜謐無聲"
+          AppLanguage.EN -> "Silence"
           AppLanguage.JA -> "消音"
           AppLanguage.KO -> "무음"
-          AppLanguage.FR -> "Muet"
+          AppLanguage.FR -> "Silence"
           AppLanguage.DE -> "Stumm"
           AppLanguage.ES -> "Silencio"
         }
@@ -722,28 +711,6 @@ enum class TransitionChime(
           AppLanguage.FR -> "Cloche cristalline et résonante"
           AppLanguage.DE -> "Klarer, lang nachklingender Glockenton"
           AppLanguage.ES -> "Campana nítida y resonante"
-        }
-      WOODBLOCK ->
-        when (language) {
-          AppLanguage.ZH_CN -> "温润笃定的禅意笃木声"
-          AppLanguage.ZH_TW -> "溫潤篤定的禪意篤木聲"
-          AppLanguage.EN -> "Warm rhythmic meditative woodblock strike"
-          AppLanguage.JA -> "心を落ち着かせる木魚の響き"
-          AppLanguage.KO -> "마음을 가다듬는 온화한 목탁 소리"
-          AppLanguage.FR -> "Frappe boisée chaleureuse et apaisante"
-          AppLanguage.DE -> "Warmer, meditativer Holzklang"
-          AppLanguage.ES -> "Toque de madera rítmico y cálido"
-        }
-      DROPLET ->
-        when (language) {
-          AppLanguage.ZH_CN -> "灵动清透的泉水清滴声"
-          AppLanguage.ZH_TW -> "靈動清透的泉水清滴聲"
-          AppLanguage.EN -> "Pure crystalline droplet falling softly"
-          AppLanguage.JA -> "澄み切った一滴の雫の音"
-          AppLanguage.KO -> "맑고 투명한 물방울 소리"
-          AppLanguage.FR -> "Pure goutte d'eau cristalline"
-          AppLanguage.DE -> "Reiner, glasklarer Wassertropfen"
-          AppLanguage.ES -> "Gota cristalina cayendo suavemente"
         }
       HARMONIC ->
         when (language) {

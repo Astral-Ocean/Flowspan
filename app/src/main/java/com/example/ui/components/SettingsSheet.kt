@@ -510,7 +510,7 @@ fun SettingsScreen(
                 Modifier
                   .fillMaxWidth()
                   .background(rowHighlight)
-                  .defaultMinSize(minHeight = 52.dp)
+                  .defaultMinSize(minHeight = 50.dp)
                   .clickable(
                     role = Role.RadioButton,
                     interactionSource = rowInteraction,
@@ -518,26 +518,20 @@ fun SettingsScreen(
                   ) {
                     onLanguageSelect(languageItem)
                   }
-                  .padding(horizontal = 16.dp, vertical = 12.dp)
+                  .padding(horizontal = 16.dp, vertical = 13.dp)
                   .testTag("language_option_${languageItem.storageKey}"),
               verticalAlignment = Alignment.CenterVertically,
             ) {
-              Column(modifier = Modifier.weight(1f)) {
-                Text(
-                  text = languageItem.nativeLabel,
-                  style =
-                    MaterialTheme.typography.bodyLarge.copy(
-                      fontSize = 15.5.sp,
-                      fontWeight = if (selected) FontWeight.Medium else FontWeight.Normal,
-                    ),
-                  color = palette.inkPrimary,
-                )
-                Text(
-                  text = languageItem.englishLabel,
-                  style = MaterialTheme.typography.bodyMedium.copy(fontSize = 12.sp),
-                  color = palette.inkSecondary,
-                )
-              }
+              Text(
+                text = languageItem.nativeLabel,
+                style =
+                  MaterialTheme.typography.bodyLarge.copy(
+                    fontSize = 15.5.sp,
+                    fontWeight = if (selected) FontWeight.Medium else FontWeight.Normal,
+                  ),
+                color = palette.inkPrimary,
+                modifier = Modifier.weight(1f),
+              )
 
               if (selected) {
                 Spacer(modifier = Modifier.width(8.dp))
@@ -629,7 +623,7 @@ fun SettingsScreen(
             verticalAlignment = Alignment.CenterVertically,
           ) {
             Text(
-              text = "Flowspan",
+              text = lang.versionLabel,
               style = MaterialTheme.typography.bodyLarge.copy(fontSize = 15.5.sp),
               color = palette.inkPrimary,
             )

@@ -54,9 +54,9 @@ class ExampleRobolectricTest {
   }
 
   @Test
-  fun `unified phase canonical names use ready focus break without duration suffix`() {
-    assertEquals("准备", phaseCanonicalName(TimerPhase.IDLE, AppLanguage.ZH_CN))
-    assertEquals("Ready", phaseCanonicalName(TimerPhase.IDLE, AppLanguage.EN))
+  fun `unified phase canonical names use poised focus break without duration suffix`() {
+    assertEquals("静候", phaseCanonicalName(TimerPhase.IDLE, AppLanguage.ZH_CN))
+    assertEquals("Poised", phaseCanonicalName(TimerPhase.IDLE, AppLanguage.EN))
     assertEquals("集中", phaseCanonicalName(TimerPhase.FOCUS, AppLanguage.JA))
     assertEquals("집중", phaseCanonicalName(TimerPhase.FOCUS, AppLanguage.KO))
     assertEquals("Pause", phaseCanonicalName(TimerPhase.BREAK, AppLanguage.FR))
@@ -199,25 +199,26 @@ class ExampleRobolectricTest {
   }
 
   @Test
-  fun `transition chime options cover bell woodblock droplet harmonic and none`() {
-    assertEquals(5, TransitionChime.entries.size)
+  fun `transition chime options cover bell harmonic and none`() {
+    assertEquals(3, TransitionChime.entries.size)
     assertEquals(TransitionChime.BELL, TransitionChime.fromKey(null))
+    assertEquals("静谧无声", TransitionChime.NONE.title(AppLanguage.ZH_CN))
 
     val app = ApplicationProvider.getApplicationContext<Application>()
     val repo = com.example.data.PreferencesRepository(app)
     kotlinx.coroutines.runBlocking {
-      repo.setTransitionChime(TransitionChime.WOODBLOCK)
+      repo.setTransitionChime(TransitionChime.HARMONIC)
     }
 
     val viewModel = FlowspanViewModel(app)
     assertEquals(
-      TransitionChime.WOODBLOCK,
+      TransitionChime.HARMONIC,
       viewModel.uiState.value.preferences.transitionChime,
     )
 
-    viewModel.setTransitionChime(TransitionChime.DROPLET)
+    viewModel.setTransitionChime(TransitionChime.BELL)
     assertEquals(
-      TransitionChime.DROPLET,
+      TransitionChime.BELL,
       viewModel.uiState.value.preferences.transitionChime,
     )
   }

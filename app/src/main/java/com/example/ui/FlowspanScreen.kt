@@ -169,7 +169,10 @@ fun FlowspanRoot(viewModel: FlowspanViewModel) {
   }
 }
 
-internal fun phaseCanonicalName(phase: TimerPhase, language: AppLanguage): String =
+internal fun phaseCanonicalName(
+  phase: TimerPhase,
+  language: AppLanguage,
+): String =
   when (phase) {
     TimerPhase.IDLE -> language.readyTitle
     TimerPhase.FOCUS -> language.focusTitle

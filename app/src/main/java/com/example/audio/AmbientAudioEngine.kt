@@ -94,8 +94,6 @@ class AmbientAudioEngine(@Suppress("UNUSED_PARAMETER") context: Context) {
       val sampleRate = 44100
       val durationSec =
         when (chime) {
-          TransitionChime.WOODBLOCK -> 0.38
-          TransitionChime.DROPLET -> 0.55
           TransitionChime.HARMONIC -> 1.85
           TransitionChime.BELL -> 1.65
           TransitionChime.NONE -> return@launch
@@ -122,26 +120,6 @@ class AmbientAudioEngine(@Suppress("UNUSED_PARAMETER") context: Context) {
                 sin(2.0 * PI * octFreq * t) * 0.12) * env * vol * 0.48
             sigL = bell
             sigR = bell
-          }
-
-          TransitionChime.WOODBLOCK -> {
-            // Meditative percussive knock: hollow drop from 440Hz -> 330Hz with rapid decay
-            val pitch = 330.0 + 120.0 * exp(-t * 35.0)
-            val env = exp(-t * 14.0) * (t / 0.003).coerceAtMost(1.0)
-            val knock =
-              (sin(2.0 * PI * pitch * t) * 0.75 +
-                sin(2.0 * PI * pitch * 2.08 * t) * 0.25) * env * vol * 0.55
-            sigL = knock
-            sigR = knock
-          }
-
-          TransitionChime.DROPLET -> {
-            // Spring water droplet: subtle initial dip then smooth upward glide with crystalline decay
-            val pitch = 1150.0 + 480.0 * (1.0 - exp(-t * 40.0))
-            val env = exp(-t * 7.5) * (t / 0.008).coerceAtMost(1.0)
-            val droplet = sin(2.0 * PI * pitch * t) * env * vol * 0.42
-            sigL = droplet * 0.95
-            sigR = droplet * 1.05
           }
 
           TransitionChime.HARMONIC -> {
