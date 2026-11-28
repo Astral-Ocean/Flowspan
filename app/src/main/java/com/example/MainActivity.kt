@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -31,7 +32,17 @@ class MainActivity : ComponentActivity() {
       try {
         splashScreen.setSplashScreenTheme(themeRes)
         splashScreen.setOnExitAnimationListener { splashScreenView ->
-          splashScreenView.remove()
+          // Instantly tint the transition screen to match the user's chosen palette
+          splashScreenView.setBackgroundColor(launchBgArgb)
+          try {
+            splashScreenView.iconView?.visibility = View.GONE
+          } catch (_: Throwable) {}
+          // Smooth 120ms fade transition so the user never sees any jarring or mismatched color
+          splashScreenView.animate()
+            .alpha(0f)
+            .setDuration(120L)
+            .withEndAction { splashScreenView.remove() }
+            .start()
         }
       } catch (_: Throwable) {}
     }

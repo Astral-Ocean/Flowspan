@@ -20,7 +20,8 @@ fun editorialSerifFamily(language: com.example.model.AppLanguage): FontFamily =
     com.example.model.AppLanguage.ZH_CN,
     com.example.model.AppLanguage.ZH_TW,
     com.example.model.AppLanguage.JA,
-    com.example.model.AppLanguage.KO -> FontFamily.Serif
+    com.example.model.AppLanguage.KO,
+    com.example.model.AppLanguage.RU -> FontFamily.Serif
     else -> NewsreaderFontFamily
   }
 

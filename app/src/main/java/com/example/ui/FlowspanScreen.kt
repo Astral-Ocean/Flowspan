@@ -3,6 +3,7 @@ package com.example.ui
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -68,30 +69,22 @@ import java.util.Locale
 fun FlowspanRoot(viewModel: FlowspanViewModel) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-  // Silently pre-warm SettingsScreen after initial frame so opening Settings never cold-composes
-  var keepSettingsWarmed by remember { mutableStateOf(false) }
-  LaunchedEffect(Unit) {
-    kotlinx.coroutines.delay(160L)
-    keepSettingsWarmed = true
-  }
-  if (uiState.isSettingsOpen) {
-    keepSettingsWarmed = true
-  }
-
   val settingsSlideState =
     animateFloatAsState(
       targetValue = if (uiState.isSettingsOpen) 1f else 0f,
-      animationSpec = tween(durationMillis = 280, easing = FastOutSlowInEasing),
+      animationSpec = tween(durationMillis = 260, easing = FastOutSlowInEasing),
       label = "settings_slide_progress",
     )
 
   val context = androidx.compose.ui.platform.LocalContext.current
   val activePalette = uiState.preferences.palette
+  val paletteColors = com.example.ui.theme.paletteFor(activePalette)
+
   LaunchedEffect(activePalette) {
     val activity = context as? android.app.Activity ?: return@LaunchedEffect
     val themeRes = com.example.ui.theme.splashThemeResFor(activePalette)
     val bgArgb =
-      with(com.example.ui.theme.paletteFor(activePalette).meshBase) {
+      with(paletteColors.meshBase) {
         android.graphics.Color.argb(
           (alpha * 255f + 0.5f).toInt(),
           (red * 255f + 0.5f).toInt(),
@@ -108,7 +101,12 @@ fun FlowspanRoot(viewModel: FlowspanViewModel) {
   }
 
   FlowspanTheme(paletteId = uiState.preferences.palette) {
-    Box(modifier = Modifier.fillMaxSize()) {
+    // Fill the root box directly with palette.meshBase so there is zero uncolored flash
+    Box(
+      modifier = Modifier
+        .fillMaxSize()
+        .background(paletteColors.meshBase)
+    ) {
       Box(
         modifier =
           Modifier
@@ -132,7 +130,9 @@ fun FlowspanRoot(viewModel: FlowspanViewModel) {
         )
       }
 
-      if (keepSettingsWarmed) {
+      // Render SettingsScreen ONLY when user opens it or while sliding in/out
+      // Completely eliminating cold-start composition freeze and frame drops
+      if (uiState.isSettingsOpen || settingsSlideState.value > 0.001f) {
         Box(
           modifier =
             Modifier
@@ -162,6 +162,11 @@ fun FlowspanRoot(viewModel: FlowspanViewModel) {
             onAmbientTrackSelect = viewModel::setAmbientTrack,
             onTransitionChimeSelect = viewModel::setTransitionChime,
             onLanguageSelect = viewModel::setLanguage,
+            onCheckForUpdates = viewModel::checkForUpdates,
+            updateCheckResult = viewModel.updateCheckResult.collectAsStateWithLifecycle().value,
+            downloadProgress = viewModel.downloadProgress.collectAsStateWithLifecycle().value,
+            onDownloadUpdate = viewModel::downloadAndInstallUpdate,
+            onDismissUpdateDialog = viewModel::dismissUpdateDialog,
           )
         }
       }

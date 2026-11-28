@@ -44,10 +44,16 @@ import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.rounded.OpenInNew
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Remove
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -100,6 +106,11 @@ fun SettingsScreen(
   onAmbientTrackSelect: (AmbientTrack) -> Unit,
   onTransitionChimeSelect: (TransitionChime) -> Unit,
   onLanguageSelect: (AppLanguage) -> Unit,
+  onCheckForUpdates: () -> Unit = {},
+  updateCheckResult: com.example.update.UpdateCheckResult? = null,
+  downloadProgress: Float? = null,
+  onDownloadUpdate: (com.example.update.ReleaseInfo) -> Unit = {},
+  onDismissUpdateDialog: () -> Unit = {},
   modifier: Modifier = Modifier,
 ) {
   BackHandler(enabled = isActive, onBack = onDismiss)
@@ -613,25 +624,256 @@ fun SettingsScreen(
 
           IosRowDivider()
 
+          val versionInteraction = remember { MutableInteractionSource() }
+          val versionPressed by versionInteraction.collectIsPressedAsState()
+          val versionHighlight by animateColorAsState(
+            targetValue =
+              if (versionPressed) palette.accent.copy(alpha = 0.055f) else Color.Transparent,
+            animationSpec = tween(100),
+            label = "version_row_highlight",
+          )
+
           Row(
             modifier =
               Modifier
                 .fillMaxWidth()
-                .defaultMinSize(minHeight = 48.dp)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+                .background(versionHighlight)
+                .defaultMinSize(minHeight = 52.dp)
+                .clickable(
+                  interactionSource = versionInteraction,
+                  indication = null,
+                  onClick = onCheckForUpdates,
+                )
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .testTag("version_check_update_row"),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
           ) {
-            Text(
-              text = lang.versionLabel,
-              style = MaterialTheme.typography.bodyLarge.copy(fontSize = 15.5.sp),
-              color = palette.inkPrimary,
-            )
-            Text(
-              text = com.example.BuildConfig.VERSION_NAME,
-              style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
-              color = palette.inkSecondary,
-            )
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+              Text(
+                text = lang.versionLabel,
+                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 15.5.sp),
+                color = palette.inkPrimary,
+              )
+              Text(
+                text = lang.checkUpdate,
+                style =
+                  MaterialTheme.typography.bodyMedium.copy(
+                    fontSize = 12.sp,
+                    color = palette.accent,
+                  ),
+              )
+            }
+
+            Row(
+              verticalAlignment = Alignment.CenterVertically,
+              horizontalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+              Text(
+                text = com.example.BuildConfig.VERSION_NAME,
+                style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
+                color = palette.inkSecondary,
+              )
+              Icon(
+                imageVector = Icons.AutoMirrored.Rounded.OpenInNew,
+                contentDescription = lang.checkUpdate,
+                tint = palette.accent,
+                modifier = Modifier.size(16.dp),
+              )
+            }
+          }
+        }
+      }
+    }
+
+    // Modal Update Flow Dialog
+    if (updateCheckResult != null) {
+      UpdateFlowDialog(
+        result = updateCheckResult,
+        downloadProgress = downloadProgress,
+        lang = lang,
+        palette = palette,
+        serifFamily = serifFamily,
+        onDownload = onDownloadUpdate,
+        onRetry = onCheckForUpdates,
+        onDismiss = onDismissUpdateDialog,
+      )
+    }
+  }
+}
+
+@Composable
+private fun UpdateFlowDialog(
+  result: com.example.update.UpdateCheckResult,
+  downloadProgress: Float?,
+  lang: AppLanguage,
+  palette: com.example.ui.theme.FlowspanPalette,
+  serifFamily: androidx.compose.ui.text.font.FontFamily,
+  onDownload: (com.example.update.ReleaseInfo) -> Unit,
+  onRetry: () -> Unit,
+  onDismiss: () -> Unit,
+) {
+  Box(
+    modifier =
+      Modifier
+        .fillMaxSize()
+        .background(Color.Black.copy(alpha = 0.45f))
+        .clickable(
+          interactionSource = remember { MutableInteractionSource() },
+          indication = null,
+          onClick = {
+            if (downloadProgress == null) onDismiss()
+          },
+        ),
+    contentAlignment = Alignment.Center,
+  ) {
+    Column(
+      modifier =
+        Modifier
+          .padding(horizontal = 28.dp)
+          .widthIn(max = 420.dp)
+          .fillMaxWidth()
+          .clip(RoundedCornerShape(UnifiedOuterRadius))
+          .background(palette.sheetSurface)
+          .clickable(
+            interactionSource = remember { MutableInteractionSource() },
+            indication = null,
+            onClick = {},
+          )
+          .padding(24.dp),
+      horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+      when (result) {
+        is com.example.update.UpdateCheckResult.UpToDate -> {
+          Text(
+            text = lang.alreadyLatest,
+            style =
+              MaterialTheme.typography.headlineSmall.copy(
+                fontFamily = serifFamily,
+                fontSize = 20.sp,
+              ),
+            color = palette.inkPrimary,
+          )
+          Spacer(modifier = Modifier.height(8.dp))
+          Text(
+            text = "${lang.versionLabel} ${result.currentVersion}",
+            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
+            color = palette.inkSecondary,
+          )
+          Spacer(modifier = Modifier.height(20.dp))
+          Button(
+            onClick = onDismiss,
+            shape = RoundedCornerShape(UnifiedInnerRadius),
+            colors = ButtonDefaults.buttonColors(containerColor = palette.accent),
+            modifier = Modifier.fillMaxWidth().height(46.dp),
+          ) {
+            Text(text = lang.ok, color = Color.White)
+          }
+        }
+
+        is com.example.update.UpdateCheckResult.UpdateAvailable -> {
+          Text(
+            text = "${lang.updateAvailable}: ${result.release.title}",
+            style =
+              MaterialTheme.typography.headlineSmall.copy(
+                fontFamily = serifFamily,
+                fontSize = 20.sp,
+              ),
+            color = palette.inkPrimary,
+          )
+          Spacer(modifier = Modifier.height(8.dp))
+
+          val bodyText =
+            if (result.release.body.isNotBlank()) result.release.body
+            else "${lang.versionLabel} ${result.currentVersion} → ${result.release.tagName}"
+
+          Text(
+            text = bodyText,
+            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 13.5.sp),
+            color = palette.inkSecondary,
+            modifier = Modifier.fillMaxWidth(),
+          )
+
+          Spacer(modifier = Modifier.height(20.dp))
+
+          if (downloadProgress != null) {
+            Column(
+              modifier = Modifier.fillMaxWidth(),
+              horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+              LinearProgressIndicator(
+                progress = { downloadProgress },
+                modifier = Modifier.fillMaxWidth().height(8.dp).clip(RoundedCornerShape(4.dp)),
+                color = palette.accent,
+                trackColor = palette.hairlineDivider,
+              )
+              Spacer(modifier = Modifier.height(10.dp))
+              Text(
+                text = "${lang.downloading} ${(downloadProgress * 100).toInt()}%",
+                style = MaterialTheme.typography.bodyMedium.copy(fontSize = 13.sp),
+                color = palette.inkPrimary,
+              )
+            }
+          } else {
+            Row(
+              modifier = Modifier.fillMaxWidth(),
+              horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+              OutlinedButton(
+                onClick = onDismiss,
+                shape = RoundedCornerShape(UnifiedInnerRadius),
+                modifier = Modifier.weight(1f).height(46.dp),
+              ) {
+                Text(text = lang.cancel, color = palette.inkSecondary)
+              }
+              Button(
+                onClick = { onDownload(result.release) },
+                shape = RoundedCornerShape(UnifiedInnerRadius),
+                colors = ButtonDefaults.buttonColors(containerColor = palette.accent),
+                modifier = Modifier.weight(1f).height(46.dp),
+              ) {
+                Text(text = lang.downloadAndInstall, color = Color.White)
+              }
+            }
+          }
+        }
+
+        is com.example.update.UpdateCheckResult.Error -> {
+          Text(
+            text = lang.updateFailed,
+            style =
+              MaterialTheme.typography.headlineSmall.copy(
+                fontFamily = serifFamily,
+                fontSize = 20.sp,
+              ),
+            color = palette.inkPrimary,
+          )
+          Spacer(modifier = Modifier.height(8.dp))
+          Text(
+            text = result.message,
+            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 13.sp),
+            color = palette.inkSecondary,
+          )
+          Spacer(modifier = Modifier.height(20.dp))
+          Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+          ) {
+            OutlinedButton(
+              onClick = onDismiss,
+              shape = RoundedCornerShape(UnifiedInnerRadius),
+              modifier = Modifier.weight(1f).height(46.dp),
+            ) {
+              Text(text = lang.cancel, color = palette.inkSecondary)
+            }
+            Button(
+              onClick = onRetry,
+              shape = RoundedCornerShape(UnifiedInnerRadius),
+              colors = ButtonDefaults.buttonColors(containerColor = palette.accent),
+              modifier = Modifier.weight(1f).height(46.dp),
+            ) {
+              Text(text = lang.retry, color = Color.White)
+            }
           }
         }
       }

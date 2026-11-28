@@ -57,7 +57,7 @@ internal class PetalSimulationEngine(private val dpToPx: Float) {
   private val minRadiusPx = 5.4f * dpToPx
   private val maxRadiusPx = 10.0f * dpToPx
 
-  val poolSize = 24
+  val poolSize = 18
   private val particles = Array(poolSize) { PetalParticle() }
 
   var canvasWidth: Float = 0f
@@ -121,8 +121,7 @@ internal class PetalSimulationEngine(private val dpToPx: Float) {
     }
 
     val totalDt = dtRaw.coerceIn(0.001f, 0.045f)
-    val subSteps = 2
-    val dt = totalDt * 0.5f
+    val dt = totalDt
 
     updateMacroEvents(totalDt, w, h, windEventsEnabled)
 
@@ -156,12 +155,11 @@ internal class PetalSimulationEngine(private val dpToPx: Float) {
     val hasTouch = touchStrength > 0.02f
     val gustRatio = if (gustActive) (gustElapsed / gustDuration).coerceIn(0f, 1f) else 0f
 
-    for (s in 0 until subSteps) {
-      simTime += dt
-      val t1x = simTime * 0.42f
-      val t1y = simTime * 0.27f
-      val t2 = simTime * 0.68f
-      val t2y = t2 * 0.7f
+    simTime += dt
+    val t1x = simTime * 0.42f
+    val t1y = simTime * 0.27f
+    val t2 = simTime * 0.68f
+    val t2y = t2 * 0.7f
 
       for (i in 0 until poolSize) {
         val p = particles[i]
@@ -266,7 +264,6 @@ internal class PetalSimulationEngine(private val dpToPx: Float) {
         p.x += p.vx * dt
         p.y += p.vy * dt
       }
-    }
 
     // Recycle only once completely outside viewport bounds
     for (i in 0 until poolSize) {
